@@ -1,8 +1,5 @@
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import Imputer
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import OneHotEncoder
 from sklearn import linear_model
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -10,12 +7,8 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 pd.options.mode.use_inf_as_na = True
 
-
-label_encoder = LabelEncoder()
-
 #replacing missing values with mean
 imp = Imputer(missing_values="NaN", strategy = 'mean', axis=0)
-
 data = pd.read_csv('train.csv', header = 0)
 
 #removing features that we don't need
@@ -52,18 +45,18 @@ features = imp.fit_transform(features)
 
 
 #splitting the dataset
-x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.2)
+x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.25    )
 
 
 #clf = linear_model.LogisticRegression()
-clf = RandomForestClassifier(n_estimators=8)
+clf = RandomForestClassifier(n_estimators=20)
 #clf = KNeighborsClassifier(n_neighbors=35)
 #from sklearn.tree import DecisionTreeClassifier
 #clf = DecisionTreeClassifier()
 
 clf.fit(x_train, y_train)
-preds = clf.predict(x_test)
-print("accuracy: ", accuracy_score(y_test, preds))
+print(data.head())
+print("accuracy with new method", clf.score(x_test,y_test))
 #clf.fit(features, labels)
 ##limits = range(1, 31)
 #scores = []
@@ -81,9 +74,6 @@ plt.plot(limits, scores)
 plt.show()
 #print("Acurracy: ", accuracy_score(y_test, preds))
 '''
-#need to OneHotEncode Pclass & Embarked columns
-
-#print(data.head())
 
 #reading input and testing now
 #===========================TESTING================================================================================
@@ -120,5 +110,4 @@ result = clf.predict(features)
 result = result.tolist()
 df = pd.DataFrame({'PassengerId': d, 'Survived':result})
 df.set_index('PassengerId', inplace=True)
-
 df.to_csv('out.csv', sep=',')
