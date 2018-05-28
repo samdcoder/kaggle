@@ -7,6 +7,7 @@ from sklearn import linear_model
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+from sklearn.ensemble import RandomForestClassifier
 pd.options.mode.use_inf_as_na = True
 
 
@@ -41,24 +42,29 @@ data["Embarked"] = data["Embarked"].replace(['C'], 2)
 pclass = data["Pclass"].tolist()
 pclass = np.array(pclass)
 #converting python dataframe to list of lists
+
+#OneHotEncode
+data = pd.get_dummies(data, columns=['Pclass', 'Embarked'])
+
 features = data.values.tolist()
 features = imp.fit_transform(features)
+
+
 
 #splitting the dataset
 x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.2)
 
 
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import *
 #clf = linear_model.LogisticRegression()
-clf = RandomForestClassifier(n_estimators=29)
+clf = RandomForestClassifier(n_estimators=8)
 #clf = KNeighborsClassifier(n_neighbors=35)
 #from sklearn.tree import DecisionTreeClassifier
 #clf = DecisionTreeClassifier()
-#x_test,x_train,y_test,y_train = train_test_split(features, labels, test_size = 0.25)
-#clf.fit(x_train, y_train)
 
-clf.fit(features, labels)
+clf.fit(x_train, y_train)
+preds = clf.predict(x_test)
+print("accuracy: ", accuracy_score(y_test, preds))
+#clf.fit(features, labels)
 ##limits = range(1, 31)
 #scores = []
 
@@ -76,8 +82,8 @@ plt.show()
 #print("Acurracy: ", accuracy_score(y_test, preds))
 '''
 #need to OneHotEncode Pclass & Embarked columns
-print(data.head())
 
+#print(data.head())
 
 #reading input and testing now
 #===========================TESTING================================================================================
@@ -103,6 +109,9 @@ data["Sex"] = data["Sex"].replace(['female'], 0)
 data["Embarked"] = data["Embarked"].replace(['S'], 0)
 data["Embarked"] = data["Embarked"].replace(['Q'], 1)
 data["Embarked"] = data["Embarked"].replace(['C'], 2)
+
+#OneHotEncode
+data = pd.get_dummies(data, columns=['Pclass', 'Embarked'])
 
 #converting python dataframe to list of lists
 features = data.values.tolist()
